@@ -1,0 +1,27 @@
+h1{
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 120px;
+    font-weight: 700;
+    line-height: 144%;
+}
+
+.splash {
+    background-color: #1a1699;
+    text-align: right;
+    min-height: 800px;
+    padding: 20px;
+    background-image: url(./img_3356.jpg) 
+}
+.nav__item{
+    text-align: right;
+    display: inline-block;
+    padding: 0 20px;
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+}
+.logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 120px;
+    font-weight: 700;
+}
