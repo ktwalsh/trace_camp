@@ -1,0 +1,13 @@
+{% extends 'home.html' %}
+{% block body %}
+<section class="text-center masthead">
+  <h2>Login</h2>
+    <form method="post">{% csrf_token %}
+        <label for="username">Username</label>
+        <textarea name="username" cols="40" rows="1" required="" id="id_username" class="form-control">{{form.username.value|default:""}}</textarea>
+        <label for="password">Password</label>
+        <textarea name="password" cols="40" rows="1" required="" id="id_pasword" class="form-control">{{form.password.value|default:""}}</textarea>        
+        <input type="submit" value="Login" class="form-control">
+    </form>
+</section>
+{% endblock %}

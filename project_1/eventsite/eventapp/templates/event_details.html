@@ -1,0 +1,16 @@
+{% extends "home.html" %}
+{% block body %}
+<section class="text-center masthead">
+    <div class="container">
+        <h1>{{ object.title }}</h1>
+        <p>{{ object.description }}</p>
+        <p>Location: {{ object.location }}</p>
+        <p>Date: {{ object.date }}</p>
+        <p>Number of people going: {{ object.attendees }}</p>
+   
+        <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
+        <a href="/event/delete/{{event.id}}" class="btn btn-primary">Delete</a>
+        <a href="" class="btn btn-primary">I'm going!</a>
+    </div>
+</section>
+{% endblock %}

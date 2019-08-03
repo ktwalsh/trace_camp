@@ -1,0 +1,23 @@
+{% extends "home.html" %}
+{% block body %}
+<section class="text-center masthead">
+    <h1>Create Event</h1>
+    <div class="container">
+        <form method="post">{% csrf_token %}
+            <div class="form-group">                     
+                <label for="title">Title</label>
+                <textarea name="title" cols="40" rows="10" required="" id="id_title" class="form-control">{{form.title.value|default:""}}</textarea>
+                   
+                <label for="description">Description</label>
+                <textarea name="description" cols="40" rows="10" required="" id="id_description" class="form-control">{{form.description.value|default:""}}</textarea>
+                <label for="location">Location</label>
+                <textarea name="location" cols="40" rows="10" required="" id="id_title" class="form-control">{{form.location.value|default:""}}</textarea>
+                <label for="date">Date of Event</label>
+                <input type="datetime-local" name="date" value="{{form.date.value}}">
+
+                <input type="submit" value="Create Event" class="form-control">
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
