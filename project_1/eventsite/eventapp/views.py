@@ -15,15 +15,19 @@ class ListEvent(ListView):
 
 class CreateEvent(LoginRequiredMixin, CreateView):
     model = Event
-    fields = ['title', 'description', 'location', 'date']
+    fields = ['title', 'description', 'location', 'date', 'time']
 
     def get_success_url(self):
         return '/event/view'
 
+    def form_valid(self, form):
+        form.instance.creator_id = self.request.user.id
+        return super(CreateEvent, self).form_valid(form)
+
 
 class UpdateEvent(LoginRequiredMixin, UpdateView):
     model = Event
-    fields = ['title', 'description', 'location', 'date']
+    fields = ['title', 'description', 'location', 'date', 'time']
 
     def get_success_url(self):
         return '/event/view'

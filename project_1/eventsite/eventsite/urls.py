@@ -23,6 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('event/', include('eventapp.urls')),
     path('home/', TemplateView.as_view(template_name="home.html"), name = 'home'),
-    path('accounts/', include('eventapp.urls')),
+    path('auth/', include('authentication.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

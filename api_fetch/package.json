@@ -1,0 +1,18 @@
+{
+  "name": "api_fetch",
+  "version": "1.0.0",
+  "description": "fetches data from an api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "trace_camp"
+  },
+  "author": "kevinw",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0"
+  }
+}

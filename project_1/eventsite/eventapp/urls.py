@@ -9,5 +9,4 @@ urlpatterns = [
      path('update/<slug:pk>', views.UpdateEvent.as_view(template_name="event_form.html")),
      path('delete/<slug:pk>', views.DeleteEvent.as_view(template_name="event_confirm_delete.html")),
      path('details/<slug:pk>', views.EventDetails.as_view(template_name="event_details.html")),     
-#     path('going/<slug:pk>', views.EventgoerDetails.as_view(template_name="eventgoer_details.html")),
 ]

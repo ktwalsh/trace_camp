@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'eventapp.apps.EventappConfig',
+    'eventapp',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -123,4 +124,3 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-AUTH_USER_MODEL = 'eventapp.CustomUser'

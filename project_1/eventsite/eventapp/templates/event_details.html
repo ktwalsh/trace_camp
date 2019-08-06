@@ -6,11 +6,15 @@
         <p>{{ object.description }}</p>
         <p>Location: {{ object.location }}</p>
         <p>Date: {{ object.date }}</p>
-        <p>Number of people going: {{ object.attendees }}</p>
-   
+        <p>Time: {{ object.time }}</p>
+        <p>Host: {{ object.creator }}</p>
+        
+        {% if object.creator == user %}
         <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
         <a href="/event/delete/{{event.id}}" class="btn btn-primary">Delete</a>
+        {% else %}
         <a href="" class="btn btn-primary">I'm going!</a>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
