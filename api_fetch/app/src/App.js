@@ -19,30 +19,15 @@ function App() {
     return <tr> <td>{planet.name}</td> <td>{planet.population}</td> <td>{planet.rotation_period}</td> <td>{planet.orbital_period}</td> <td>{planet.climate}</td></tr>
   }
 
-  // useEffect(() => {
-  //   console.log(planetData.map(parsePlanet))
-  //   setTableData(planetData.map(parsePlanet))
-  // }, [planetData])
-
-  // useEffect(() => {
-  //   getPlanets(1).then(
-  //     (response) => {
-  //       console.log(response.data.results)
-  //       setPlanetData(response.data.results)
-  //     })
-
-
-
-  
-      
-  // })
-
 
   useEffect(() => {
     console.log(page)
-    getPlanets(page).then((response) => setPlanetData(response.data.results.map(parsePlanet)))
+    getPlanets(page).then((response) => {setPlanetData(response.data.results.map(parsePlanet)
+    )
+      console.log(response)
+  })
   }, [page])
-
+console.log(planetData)
     return (
       <div className="App">
         <input type="number" value={page} onChange = {(e) => setPage(e.target.value)} max="7" />
