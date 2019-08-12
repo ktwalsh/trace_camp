@@ -8,6 +8,7 @@ import Details from './components/Details';
 import Home from './components/Home';
 import AllEvents from "./components/AllEvents"
 import EventDetail from './components/EventDetail'
+import CreateEvent from './components/CreateEvent'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/allevents" exact component={AllEvents} />
         <Route path="/event/:event_id" component={EventDetail} />
         <Route path="/myevents" component={Event} />
+        <Route path='/create' component={CreateEvent} />
         <Route path="/attendees/:event_id/" exact component={Attendee} />
         <Route path="/attendees/:event_id/details/:attendee_id" component={Details} />
       </BrowserRouter>

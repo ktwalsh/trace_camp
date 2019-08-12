@@ -28,3 +28,9 @@ export const getDetails = (event_id, attendee_id) => {
 export const getVenue = (venue_id) => {
   return axios.get(`https://www.eventbriteapi.com/v3/venues/${venue_id}/?token=${API_KEY}`)
 }
+
+export const postEvent = (org_id) => {
+  return axios.post(`https://www.eventbriteapi.com/v3/organizations/${org_id}/events/?token=${API_KEY}`,
+    {}
+  )
+}

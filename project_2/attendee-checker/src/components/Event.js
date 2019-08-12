@@ -32,6 +32,7 @@ function Event({ match, history }) {
                     </thead>
                     {eventData}
                 </table>
+                <Link to="/create">Create a new Event</Link>
             </div>
     )
 }
