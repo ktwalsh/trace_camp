@@ -1,0 +1,28 @@
+{% extends "home.html" %}
+{% block body %}
+<section class="text-center masthead">
+    <div class=container>
+        <h1>List of Attendees</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in object.attendees.all%}
+                <tr>
+                    <th>{{ user.first_name }} {{ user.last_name }}</th>
+                    <th>{{ user.email }} </th>
+                </tr>
+                {% empty %}
+                <tr>No attendees yet</tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <a href='/event/details/{{event.id}}' class="btn btn-primary">Back to Details</a>
+    </div>
+</section>
+{% endblock %}

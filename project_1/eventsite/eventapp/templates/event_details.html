@@ -1,19 +1,51 @@
 {% extends "home.html" %}
 {% block body %}
 <section class="text-center masthead">
+    <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC35jBVPFgwUoXf90cLVIU--lg7gW6HyTU"></script>
+    <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>
+    <style type="text/css">
+        #map {
+            width: 100%;
+            height: 480px;
+        }
+    </style>
     <div class="container">
         <h1>{{ object.title }}</h1>
         <p>{{ object.description }}</p>
-        <p>Location: {{ object.location }}</p>
         <p>Date: {{ object.date }}</p>
         <p>Time: {{ object.time }}</p>
         <p>Host: {{ object.creator }}</p>
-        
+        <p>Number of attendees: {{ object.attendees.all|length }}</p>
+        <p>Address: <span name=location cols='40' rows='10' required="" id="onClickParseView"></span></p>
+        <div id="map"></div>
+        <p hidden>Address: <textarea class="form-control" name=location cols='40' rows='10' required=""
+                id="onClickAddressView">{{ object.location }}</textarea></p>
+        <script>
+            // Get element references
+            var parsed = JSON.parse('{{object.location|safe}}')
+            var onClickPositionView = document.getElementById('onClickPositionView');
+            var onIdlePositionView = document.getElementById('onIdlePositionView');
+            var onClickAddressView = document.getElementById('onClickAddressView')
+            var onClickParseView = document.getElementById('onClickParseView')
+            // set to readable address view
+            onClickParseView.innerHTML = `${parsed.address.streetNumber} ${parsed.address.street}, ${parsed.address.placename}, ${parsed.address.adminName1}, ${parsed.address.postalcode}`
+            // Initialize locationPicker plugin and set location 
+            var lp = new locationPicker('map', { setCurrentPosition: true, lat: parsed.address.lat, lng: parsed.address.lng }, { zoom: 15 });
+
+
+
+
+        </script>
+        <br>
         {% if object.creator == user %}
         <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
         <a href="/event/delete/{{event.id}}" class="btn btn-primary">Delete</a>
+        <a href='/event/attendees/{{event.id}}' class="btn btn-primary">View Attendees</a>
         {% else %}
-        <a href="" class="btn btn-primary">I'm going!</a>
+        <form action="/event/addattendees/{{event.id}}" method="POST"> {% csrf_token %}
+            <input type="submit" class="btn btn-primary" value="I'm going!" />
+        </form>
         {% endif %}
     </div>
 </section>

@@ -8,5 +8,7 @@ urlpatterns = [
      path('create', views.CreateEvent.as_view(template_name="event_form.html")),
      path('update/<slug:pk>', views.UpdateEvent.as_view(template_name="event_form.html")),
      path('delete/<slug:pk>', views.DeleteEvent.as_view(template_name="event_confirm_delete.html")),
-     path('details/<slug:pk>', views.EventDetails.as_view(template_name="event_details.html")),     
+     path('details/<slug:pk>', views.EventDetails.as_view(template_name="event_details.html")),
+     path('attendees/<slug:pk>', views.AttendeeDetails.as_view(template_name="attendee_list.html")),          
+     path('addattendees/<slug:pk>', views.addAttendee),     
 ]

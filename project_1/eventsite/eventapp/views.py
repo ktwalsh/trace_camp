@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 
 # Create your views here.
 class ListEvent(ListView):
@@ -39,7 +40,15 @@ class DeleteEvent(LoginRequiredMixin, DeleteView):
 class EventDetails(DetailView):
     model = Event
 
+class AttendeeDetails(DetailView):
+    model = Event
+
 class SignUp(CreateView):    
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
+
+def addAttendee(request, pk):    
+    Event.objects.get(pk=pk).attendees.add(request.user)
+    print(Event.objects.get(pk=pk).creator)
+    return redirect('/event/view')
