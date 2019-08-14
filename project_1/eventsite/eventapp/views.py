@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.db.models import Q
 from django.contrib.auth.models import AbstractUser, User
+from authentication.forms import UserCreateForm
 # Create your views here.
 class ListEvent(ListView):
     model = Event
@@ -57,6 +58,12 @@ class ViewProfile(LoginRequiredMixin, DetailView):
         context['events'] = Event.objects.all()
         return context
 
+class EditProfile(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserCreateForm
+    success_url = reverse_lazy('login')
+    template_name = 'signup.html'
+    
     # def user_events(self, pk):
     #     current_user=User.objects.get(pk=pk)
     #     print(User.objects)

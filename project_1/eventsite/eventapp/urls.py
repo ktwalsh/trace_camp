@@ -13,4 +13,5 @@ urlpatterns = [
      path('addattendees/<slug:pk>', views.addAttendee),     
      path('view/search', views.searchEventList.as_view(template_name="event_list.html")),
      path('profile/<slug:pk>', views.ViewProfile.as_view(template_name="profile.html")),
+     path('profile/edit/<slug:pk>', views.EditProfile.as_view(template_name="signup.html"), name="signup"),
 ]
