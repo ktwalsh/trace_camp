@@ -41,9 +41,11 @@
         <a href='/event/attendees/{{event.id}}' class="btn btn-primary">View Attendees</a>
         {% else %}
         <!-- Adds current user to the list of attendees -->
+        {% if user.is_authenticated %}
         <form action="/event/addattendees/{{event.id}}" method="POST"> {% csrf_token %}
             <input type="submit" class="btn btn-primary" value="I'm going!" />
         </form>
+        {% endif %}
         {% endif %}
     </div>
 </section>

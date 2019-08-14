@@ -3,18 +3,21 @@
 <section class="text-center masthead">
     <!-- Creates a card with title and description of Event for each Event object -->
     <div class="container">
-        <form class="form-inline" method="GET" action="/event/view/search">
-            <div class="form-group mx-sm-3 mb-2">
-                <textarea class="form-control" name="find_nearby" cols="20" rows="1" required=""
-                    id="id_find_nearby" placeholder="Enter your zip code" maxlength="5"></textarea>
-            </div>
-            <input type="submit" class="btn btn-primary mb-2" value="Find Nearby Events" />
-        </form>
-        <a href="/event/view" class="btn btn-primary" >See all Events</a>
+        <div class="inline">
+            <form class="form-inline" method="GET" action="/event/view/search">
+                <div class="form-group mx-sm-3 mb-2">
+                    <textarea class="form-control" name="find_nearby" cols="20" rows="1" required="" id="id_find_nearby"
+                        placeholder="Enter your zip code" maxlength="5"></textarea>
+                </div>
+                <input type="submit" class="btn btn-primary mb-2" value="Find Nearby Events" />
+            </form>
+            <a href="/event/view" class="btn btn-primary">See all Events</a>
+        </div>
+        <br>
         <h1>Events</h1>
         <ul>
             <div class="row">
-                
+
                 {% for event in object_list %}
                 <div class="col-sm-4">
                     <div class="card" style="width: 18rem;">

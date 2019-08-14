@@ -1,0 +1,37 @@
+{% extends "home.html" %}
+{% load static %}
+{% block body %}
+<section class="text-center masthead">
+    <h1>Welcome, {{ user.first_name }}!</h1>
+    <p>username: {{user.username}}</p>
+    <p>Name: {{user.first_name}} {{user.last_name}}</p>
+    <p>Email: {{user.email}}</p>
+    <h2>Events from this User</h2>
+    <ul>
+        <div class="row">
+            {% for event in events %}
+            {% if event.creator == user %}
+            <div class="col-sm-4">
+                <div class="card" style="width: 18rem;">
+                    {#<img class="card-img-top" src="..." alt="Card image cap"> #}
+                    <div class="card-body">
+                        <h5 class="card-title">{{event.title}}</h5>
+                        <p class="card-text">{{event.description}}</p>
+                        <!-- If the current user is the creator, show edit and delete buttons -->
+                        {% if event.creator == user %}
+                        <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
+                        <a href="/event/delete/{{event.id}}" class="btn btn-primary">Delete</a>
+                        {% endif %}
+                        <a href="/event/details/{{event.id}}" class="btn btn-primary">Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% empty %}
+            <li>This user has not created any events</li>
+
+            {% endfor %}
+        </div>
+    </ul>
+</section>
+{% endblock %}

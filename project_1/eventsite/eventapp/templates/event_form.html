@@ -18,21 +18,28 @@
             <div class="form-group">
 
                 <label for="title">Title</label>
-                <textarea name="title" cols="40" rows="5" required="" id="id_title"
+                <textarea name="title" cols="40" rows="1" required="" id="id_title"
                     class="form-control">{{form.title.value|default:""}}</textarea>
                 <label for="description">Description</label>
-                <textarea name="description" cols="40" rows="5" required="" id="id_description"
+                <textarea name="description" cols="40" rows="1" required="" id="id_description"
                     class="form-control">{{form.description.value|default:""}}</textarea>
+                <br>
+                <label for="date">Date of Event</label>
+                <input type="date" name="date" value="{{form.date.value}}">
+                <label for="time">Time of Event</label>
+                <input type="time" name="time" value="{{form.time.value}}">
+                <br>
                 <label for="location">Location</label>
 
 
-                <div id="map"></div>
-                <!-- this line is unnecessary but taking it out breaks onClickParseView -->
-                <p>On idle position: <span id="onIdlePositionView"></span></p>
+                <!-- Displays the current coordinates -->
+                <p><span id="onIdlePositionView"></span></p>
                 <!-- Displays the closest address of the current position -->
-                <p>Chosen address: <span id="onClickParseView" ></span></p>
+                <p>Address: <span id="onClickParseView"></span></p>
                 <!-- Hidden field that assigns the current position to the location of the event object -->
-                <p hidden>Chosen address: <textarea class="form-control" name=location cols='40' rows='10' required="" id="onClickAddressView" >{{form.location.value}}</textarea></p>
+                <p hidden>Chosen address: <textarea class="form-control" name=location cols='40' rows='10' required=""
+                        id="onClickAddressView">{{form.location.value}}</textarea></p>
+                <div id="map"></div>
                 <script>
 
                     // Get element references
@@ -40,13 +47,27 @@
                     var onIdlePositionView = document.getElementById('onIdlePositionView');
                     var onClickAddressView = document.getElementById('onClickAddressView')
                     var onClickParseView = document.getElementById('onClickParseView')
+                    console.log('{{object.location|safe}}')
+                    if ('{{object.location|safe}}' === "") {
+                        var lp = new locationPicker('map', {
+                            setCurrentPosition: true,
+                        }, {
+                                zoom: 15
+                            })
+                    } else {
+                        var parsed = JSON.parse('{{object.location|safe}}')
+                        var lp = new locationPicker('map', {
+                            setCurrentPosition: true,
+                            lat: parsed.address.lat,
+                            lng: parsed.address.lng// You can omit this, defaults to true
+                        }, {
+                                zoom: 15 // You can set any google map options here, zoom defaults to 15
+                            });
+                    }
 
                     // Initialize locationPicker plugin
-                    var lp = new locationPicker('map', {
-                        setCurrentPosition: true, // You can omit this, defaults to true
-                    }, {
-                            zoom: 15 // You can set any google map options here, zoom defaults to 15
-                        });
+
+
 
                     // Listen to map idle event, listening to idle event more accurate than listening to ondrag event
                     google.maps.event.addListener(lp.map, 'idle', function (event) {
@@ -63,16 +84,13 @@
                             var parse = JSON.parse(Http.responseText)
                             console.log(Http.responseText)
                             onClickParseView.innerHTML = `${parse.address.streetNumber} ${parse.address.street}, ${parse.address.placename}, ${parse.address.adminName1}, ${parse.address.postalcode}`
-                            onClickAddressView.innerHTML = Http.responseText                           
+                            onClickAddressView.innerHTML = Http.responseText
                         }
                     });
 
 
                 </script>
-                <label for="date">Date of Event</label>
-                <input type="date" name="date" value="{{form.date.value}}">
-                <label for="time">Time of Event</label>
-                <input type="time" name="time" value="{{form.time.value}}">
+                <br>
                 <input type="submit" value="Create Event" class="form-control">
             </div>
         </form>

@@ -9,7 +9,7 @@ from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.db.models import Q
-
+from django.contrib.auth.models import AbstractUser, User
 # Create your views here.
 class ListEvent(ListView):
     model = Event
@@ -48,7 +48,22 @@ class SignUp(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
+
+class ViewProfile(LoginRequiredMixin, DetailView):
+    model = User
+
+    def get_context_data(self, **kwargs):
+        context = super(ViewProfile, self).get_context_data(**kwargs)
+        context['events'] = Event.objects.all()
+        return context
+
+    # def user_events(self, pk):
+    #     current_user=User.objects.get(pk=pk)
+    #     print(User.objects)
+    #     object_list = Event.objects.filter(creator=current_user)
+    #     return object_list
     
+# Searches for events based on zip code query 
 class searchEventList(ListView):
     model = Event
     
@@ -61,16 +76,4 @@ class searchEventList(ListView):
 def addAttendee(request, pk):    
     Event.objects.get(pk=pk).attendees.add(request.user)
     print(Event.objects.get(pk=pk).creator)
-    return redirect('/event/view')
-
-# #Searches events based on zip code
-# def search(request):
-#     zip = request.GET.get('find_nearby')    
-#     for l in Event.objects.all():
-#         loc = json.loads(l.location)['address']
-#         if(loc["postalcode"] == zip):
-            
-#     # if request.method == 'GET'
-#         # zip_code = request.GET.get('search')
-
-
+    return redirect(f'/event/details/{pk}')
