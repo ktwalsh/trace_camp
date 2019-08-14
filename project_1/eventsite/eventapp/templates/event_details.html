@@ -1,6 +1,7 @@
 {% extends "home.html" %}
 {% block body %}
 <section class="text-center masthead">
+    <!-- Load map picker and add some css for it -->
     <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC35jBVPFgwUoXf90cLVIU--lg7gW6HyTU"></script>
     <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>
@@ -10,6 +11,7 @@
             height: 480px;
         }
     </style>
+    <!-- Displays each field from Event -->
     <div class="container">
         <h1>{{ object.title }}</h1>
         <p>{{ object.description }}</p>
@@ -19,8 +21,6 @@
         <p>Number of attendees: {{ object.attendees.all|length }}</p>
         <p>Address: <span name=location cols='40' rows='10' required="" id="onClickParseView"></span></p>
         <div id="map"></div>
-        <p hidden>Address: <textarea class="form-control" name=location cols='40' rows='10' required=""
-                id="onClickAddressView">{{ object.location }}</textarea></p>
         <script>
             // Get element references
             var parsed = JSON.parse('{{object.location|safe}}')
@@ -32,17 +32,15 @@
             onClickParseView.innerHTML = `${parsed.address.streetNumber} ${parsed.address.street}, ${parsed.address.placename}, ${parsed.address.adminName1}, ${parsed.address.postalcode}`
             // Initialize locationPicker plugin and set location 
             var lp = new locationPicker('map', { setCurrentPosition: true, lat: parsed.address.lat, lng: parsed.address.lng }, { zoom: 15 });
-
-
-
-
         </script>
         <br>
+        <!-- Allows creator to edit, delete, and see attendees -->
         {% if object.creator == user %}
         <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
         <a href="/event/delete/{{event.id}}" class="btn btn-primary">Delete</a>
         <a href='/event/attendees/{{event.id}}' class="btn btn-primary">View Attendees</a>
         {% else %}
+        <!-- Adds current user to the list of attendees -->
         <form action="/event/addattendees/{{event.id}}" method="POST"> {% csrf_token %}
             <input type="submit" class="btn btn-primary" value="I'm going!" />
         </form>

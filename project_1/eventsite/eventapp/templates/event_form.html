@@ -1,6 +1,7 @@
 {% extends "home.html" %}
 {% block body %}
 <section class="text-center masthead">
+    <!-- Load script and add some css for map picker -->
     <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC35jBVPFgwUoXf90cLVIU--lg7gW6HyTU"></script>
     <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>
@@ -12,6 +13,7 @@
     </style>
     <h1>Create Event</h1>
     <div class="container">
+        <!-- Event creation form -->
         <form method="post">{% csrf_token %}
             <div class="form-group">
 
@@ -25,8 +27,11 @@
 
 
                 <div id="map"></div>
+                <!-- this line is unnecessary but taking it out breaks onClickParseView -->
                 <p>On idle position: <span id="onIdlePositionView"></span></p>
+                <!-- Displays the closest address of the current position -->
                 <p>Chosen address: <span id="onClickParseView" ></span></p>
+                <!-- Hidden field that assigns the current position to the location of the event object -->
                 <p hidden>Chosen address: <textarea class="form-control" name=location cols='40' rows='10' required="" id="onClickAddressView" >{{form.location.value}}</textarea></p>
                 <script>
 
@@ -53,9 +58,10 @@
                         const url = `http://api.geonames.org/findNearestAddressJSON?lat=${location.lat}&lng=${location.lng}&username=klevinw`
                         Http.open("GET", url);
                         Http.send();
-
+                        // changes both readable and raw variables to current position
                         Http.onreadystatechange = (e) => {
                             var parse = JSON.parse(Http.responseText)
+                            console.log(Http.responseText)
                             onClickParseView.innerHTML = `${parse.address.streetNumber} ${parse.address.street}, ${parse.address.placename}, ${parse.address.adminName1}, ${parse.address.postalcode}`
                             onClickAddressView.innerHTML = Http.responseText                           
                         }

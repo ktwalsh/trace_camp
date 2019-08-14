@@ -48,6 +48,7 @@ class SignUp(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
 
+#Takes request from event_details.html and add current user to attendee list
 def addAttendee(request, pk):    
     Event.objects.get(pk=pk).attendees.add(request.user)
     print(Event.objects.get(pk=pk).creator)
