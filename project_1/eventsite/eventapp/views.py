@@ -6,7 +6,7 @@ from eventapp.models import Event
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
 from django.db.models import Q
 from django.contrib.auth.models import AbstractUser, User
@@ -28,9 +28,12 @@ class CreateEvent(LoginRequiredMixin, CreateView):
         return super(CreateEvent, self).form_valid(form)
 
 
-class UpdateEvent(LoginRequiredMixin, UpdateView):
+class UpdateEvent(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Event
     fields = ['title', 'description', 'location', 'date', 'time']
+    
+    def test_func(self):
+        return self.request.user.id == self.get_object().creator.id
 
     def get_success_url(self):
         return '/event/view'
@@ -50,8 +53,11 @@ class SignUp(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
 
-class ViewProfile(LoginRequiredMixin, DetailView):
+class ViewProfile(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = User
+
+    def test_func(self):
+        return self.request.user.id == int(self.kwargs['pk'])
 
     def get_context_data(self, **kwargs):
         context = super(ViewProfile, self).get_context_data(**kwargs)

@@ -15,27 +15,29 @@
     <div class="container">
         <!-- Event creation form -->
         <form method="post">{% csrf_token %}
-            <div class="form-group">
+            <div class="form-group text-left">
 
                 <label for="title">Title</label>
                 <textarea name="title" cols="40" rows="1" required="" id="id_title"
                     class="form-control">{{form.title.value|default:""}}</textarea>
                 <label for="description">Description</label>
-                <textarea name="description" cols="40" rows="1" required="" id="id_description"
+                <textarea name="description" cols="40" rows="2" required="" id="id_description"
                     class="form-control">{{form.description.value|default:""}}</textarea>
                 <br>
+                <div class="text-center">
                 <label for="date">Date of Event</label>
-                <input type="date" name="date" value="{{form.date.value}}">
+                <input type="date" name="date" value="{{form.date.value|date:'Y-m-d'}}">
                 <label for="time">Time of Event</label>
-                <input type="time" name="time" value="{{form.time.value}}">
+                <input type="time" name="time" value="{{form.time.value|date:'H:i'}}">
                 <br>
-                <label for="location">Location</label>
+            </div>
+                <label for="location">Location:</label>
 
 
                 <!-- Displays the current coordinates -->
-                <p><span id="onIdlePositionView"></span></p>
+                <p hidden><span id="onIdlePositionView"></span></p>
                 <!-- Displays the closest address of the current position -->
-                <p>Address: <span id="onClickParseView"></span></p>
+                <p><span id="onClickParseView"></span></p>
                 <!-- Hidden field that assigns the current position to the location of the event object -->
                 <p hidden>Chosen address: <textarea class="form-control" name=location cols='40' rows='10' required=""
                         id="onClickAddressView">{{form.location.value}}</textarea></p>
@@ -83,7 +85,11 @@
                         Http.onreadystatechange = (e) => {
                             var parse = JSON.parse(Http.responseText)
                             console.log(Http.responseText)
-                            onClickParseView.innerHTML = `${parse.address.streetNumber} ${parse.address.street}, ${parse.address.placename}, ${parse.address.adminName1}, ${parse.address.postalcode}`
+                            if(parse.address.placename === "") {
+                                onClickParseView.innerHTML = `${parse.address.streetNumber} ${parse.address.street} <br> ${parse.address.adminName2} County, ${parse.address.adminName1}, ${parse.address.postalcode}`
+                            } else {                                
+                            onClickParseView.innerHTML = `${parse.address.streetNumber} ${parse.address.street} <br> ${parse.address.placename}, ${parse.address.adminName1}, ${parse.address.postalcode}`
+                            }
                             onClickAddressView.innerHTML = Http.responseText
                         }
                     });

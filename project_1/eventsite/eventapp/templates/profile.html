@@ -2,12 +2,27 @@
 {% load static %}
 {% block body %}
 <section class="text-center masthead">
-    <h1>Welcome, {{ user.first_name }}!</h1>
-    <p>username: {{user.username}}</p>
-    <p>Name: {{user.first_name}} {{user.last_name}}</p>
-    <p>Email: {{user.email}}</p>
+    <div class="">
+        <h1>Welcome, {{ user.first_name }}!</h1>
+    </div>
+    <dl>
+        <div class="row justify-content-md-center">
+            <dt class="col-sm-1">Username</dt>
+            <dd class="col-sm-1">{{user.username}}</dd>
+        </div>
+
+        <div class="row justify-content-md-center">
+            <dt class="col-sm-1">Name</dt>
+            <dd class="col-sm-1">{{user.first_name}} {{user.last_name}}</dd>
+        </div>
+
+        <div class="row justify-content-md-center">
+            <dt class="col-sm-1">Email</dt>
+            <dd class="col-sm-1">{{user.email}}</dd>
+        </div>
+    </dl>
     <a href="/event/profile/edit/{{user.id}}" class="btn btn-primary">Edit Profile</a>
-    <h2>Events from this User</h2>
+    <h2 class='text-left px-lg-5'>Your events</h2>
     <ul>
         <div class="row">
             {% for event in events %}
@@ -15,22 +30,24 @@
             <div class="col-sm-4">
                 <div class="card" style="width: 18rem;">
                     {#<img class="card-img-top" src="..." alt="Card image cap"> #}
-                    <div class="card-body">
+                    <div class="card-body text-left">
                         <h5 class="card-title">{{event.title}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{event.date}} at {{event.time}}</h6>
                         <p class="card-text">{{event.description}}</p>
                         <!-- If the current user is the creator, show edit and delete buttons -->
+                        <a href="/event/details/{{event.id}}" class="btn btn-outline-secondary">Details</a>
+
                         {% if event.creator == user %}
+                        <a href="/event/delete/{{event.id}}" class="btn btn-outline-secondary">Delete</a>
                         <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
-                        <a href="/event/delete/{{event.id}}" class="btn btn-primary">Delete</a>
                         {% endif %}
-                        <a href="/event/details/{{event.id}}" class="btn btn-primary">Details</a>
                     </div>
                 </div>
             </div>
             {% endif %}
             {% empty %}
-            <li>This user has not created any events</li>
-
+            <li>You haven't created any events yet!</li>
+            <a href="event/create" class="btn btn-primary">Create one now!</a>
             {% endfor %}
         </div>
     </ul>

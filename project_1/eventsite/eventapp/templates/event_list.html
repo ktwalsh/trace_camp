@@ -10,8 +10,10 @@
                         placeholder="Enter your zip code" maxlength="5"></textarea>
                 </div>
                 <input type="submit" class="btn btn-primary mb-2" value="Find Nearby Events" />
+                <div class='text-right'>
+                    <a href="/event/view" class="btn btn-link">See all Events</a>
+                </div>
             </form>
-            <a href="/event/view" class="btn btn-primary">See all Events</a>
         </div>
         <br>
         <h1>Events</h1>
@@ -22,15 +24,18 @@
                 <div class="col-sm-4">
                     <div class="card" style="width: 18rem;">
                         {#<img class="card-img-top" src="..." alt="Card image cap"> #}
-                        <div class="card-body">
+                        <div class="card-body text-left">
                             <h5 class="card-title">{{event.title}}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{event.date}} at {{event.time}}</h6>
                             <p class="card-text">{{event.description}}</p>
                             <!-- If the current user is the creator, show edit and delete buttons -->
-                            {% if event.creator == user %}
-                            <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
-                            <a href="/event/delete/{{event.id}}" class="btn btn-primary">Delete</a>
-                            {% endif %}
                             <a href="/event/details/{{event.id}}" class="btn btn-primary">Details</a>
+
+                            {% if event.creator == user %}
+                            <a href="/event/delete/{{event.id}}" class="btn btn-outline-secondary">Delete</a>
+                            <a href="/event/update/{{event.id}}" class="btn btn-outline-secondary">Edit</a>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

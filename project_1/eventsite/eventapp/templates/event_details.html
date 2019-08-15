@@ -1,6 +1,6 @@
 {% extends "home.html" %}
 {% block body %}
-<section class="text-center masthead">
+<section class="masthead">
     <!-- Load map picker and add some css for it -->
     <script type="text/javascript"
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC35jBVPFgwUoXf90cLVIU--lg7gW6HyTU"></script>
@@ -13,13 +13,41 @@
     </style>
     <!-- Displays each field from Event -->
     <div class="container">
-        <h1>{{ object.title }}</h1>
-        <p>{{ object.description }}</p>
-        <p>Date: {{ object.date }}</p>
-        <p>Time: {{ object.time }}</p>
-        <p>Host: {{ object.creator }}</p>
-        <p>Number of attendees: {{ object.attendees.all|length }}</p>
-        <p>Address: <span name=location cols='40' rows='10' required="" id="onClickParseView"></span></p>
+        <ul class="list-unstyled">
+        <h3>{{ object.title }}</h3>
+        <h6 class="text-muted">{{ object.date }} at {{ object.time }}</h6>
+    </ul>
+        <p class="col-sm-9 no-gutters">{{ object.description }}</p>
+        <p class="col-sm-9"><span name=location cols='40' rows='10' required="" id="onClickParseView"></span></p>
+        <ul class="list-inline px-lg-3">
+            <li class="list-inline-item text-muted">Hosted by {{ object.creator }}      </li>
+            <li class="list-inline-item text-muted">{{ object.attendees.all|length }} attendee(s)      </li>
+        </ul>
+        <br>
+        <!-- Allows creator to edit, delete, and see attendees -->
+        {% if object.creator == user %}
+        <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
+        <a href='/event/attendees/{{event.id}}' class="btn btn-outline-secondary">View Attendees</a>
+        <a href="/event/delete/{{event.id}}" class="btn btn-outline-secondary">Delete</a>
+        {% else %}
+        <!-- Adds current user to the list of attendees -->
+
+        {% if user.is_authenticated %}
+        <!-- If current user is already on list of attendees creates disabled button -->
+        {% if user in object.attendees.all %}
+        <a class="btn btn-outline-secondary disabled">Already Attending</a>
+        {% else %}
+        <form action="/event/addattendees/{{event.id}}" method="POST"> {% csrf_token %}
+            <input type="submit" class="btn btn-primary" value="I'm going!" />
+        </form>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        <br>
+        <br>
+        <a href="/event/view" class="btn btn-secondary">Back to all Events</a>
+        <br>
+        <br>
         <div id="map"></div>
         <script>
             // Get element references
@@ -29,24 +57,14 @@
             var onClickAddressView = document.getElementById('onClickAddressView')
             var onClickParseView = document.getElementById('onClickParseView')
             // set to readable address view
-            onClickParseView.innerHTML = `${parsed.address.streetNumber} ${parsed.address.street}, ${parsed.address.placename}, ${parsed.address.adminName1}, ${parsed.address.postalcode}`
+            if (parsed.address.placename === '') {
+                onClickParseView.innerHTML = `${parsed.address.streetNumber} ${parsed.address.street} <br>${parsed.address.adminName2} County, ${parsed.address.adminName1}, ${parsed.address.postalcode}`
+            } else {
+                onClickParseView.innerHTML = `${parsed.address.streetNumber} ${parsed.address.street} <br>${parsed.address.placename}, ${parsed.address.adminName1}, ${parsed.address.postalcode}`
+            }
             // Initialize locationPicker plugin and set location 
             var lp = new locationPicker('map', { setCurrentPosition: true, lat: parsed.address.lat, lng: parsed.address.lng }, { zoom: 15 });
         </script>
-        <br>
-        <!-- Allows creator to edit, delete, and see attendees -->
-        {% if object.creator == user %}
-        <a href="/event/update/{{event.id}}" class="btn btn-primary">Edit</a>
-        <a href="/event/delete/{{event.id}}" class="btn btn-primary">Delete</a>
-        <a href='/event/attendees/{{event.id}}' class="btn btn-primary">View Attendees</a>
-        {% else %}
-        <!-- Adds current user to the list of attendees -->
-        {% if user.is_authenticated %}
-        <form action="/event/addattendees/{{event.id}}" method="POST"> {% csrf_token %}
-            <input type="submit" class="btn btn-primary" value="I'm going!" />
-        </form>
-        {% endif %}
-        {% endif %}
     </div>
 </section>
 {% endblock %}
