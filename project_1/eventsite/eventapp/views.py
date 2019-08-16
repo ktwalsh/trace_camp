@@ -15,6 +15,8 @@ from authentication.forms import UserCreateForm
 class ListEvent(ListView):
     model = Event
 
+def redirect_view(request):
+    return redirect("/home")
 
 class CreateEvent(LoginRequiredMixin, CreateView):
     model = Event
