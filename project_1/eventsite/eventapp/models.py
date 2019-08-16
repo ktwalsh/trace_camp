@@ -8,6 +8,6 @@ class Event(models.Model):
     title = models.TextField()
     description = models.TextField()
     location = models.TextField()
-    date = models.TextField()
-    time = models.TextField()
+    date = models.DateField()
+    time = models.TimeField()
     attendees = models.ManyToManyField(User, related_name='attendees')

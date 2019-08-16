@@ -3,6 +3,7 @@ import eventapp.views as views
 from django.views.generic import TemplateView
 
 urlpatterns = [
+     path('/', views.redirect_view),
      path('signup/', views.SignUp.as_view(template_name="signup.html"), name="signup"),
      path('view', views.ListEvent.as_view(template_name="event_list.html")),
      path('create', views.CreateEvent.as_view(template_name="event_form.html")),
@@ -12,4 +13,6 @@ urlpatterns = [
      path('attendees/<slug:pk>', views.AttendeeDetails.as_view(template_name="attendee_list.html")),          
      path('addattendees/<slug:pk>', views.addAttendee),     
      path('view/search', views.searchEventList.as_view(template_name="event_list.html")),
+     path('profile/<slug:pk>', views.ViewProfile.as_view(template_name="profile.html")),
+     path('profile/edit/<slug:pk>', views.EditProfile.as_view(template_name="signup.html"), name="signup"),
 ]

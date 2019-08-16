@@ -2,9 +2,10 @@
 {% block body %}
 <section class="text-center masthead">
     <!-- Load script and add some css for map picker -->
-    <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC35jBVPFgwUoXf90cLVIU--lg7gW6HyTU"></script>
-    <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>
+    <!-- <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script> -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC35jBVPFgwUoXf90cLVIU--lg7gW6HyTU&libraries=places&callback=initMap"
+        async defer></script>
     <style type="text/css">
         #map {
             width: 100%;
@@ -15,64 +16,83 @@
     <div class="container">
         <!-- Event creation form -->
         <form method="post">{% csrf_token %}
-            <div class="form-group">
+            <div class="form-group text-left">
 
                 <label for="title">Title</label>
-                <textarea name="title" cols="40" rows="5" required="" id="id_title"
+                <textarea name="title" cols="40" rows="1" required="" id="id_title"
                     class="form-control">{{form.title.value|default:""}}</textarea>
                 <label for="description">Description</label>
-                <textarea name="description" cols="40" rows="5" required="" id="id_description"
+                <textarea name="description" cols="40" rows="2" required="" id="id_description"
                     class="form-control">{{form.description.value|default:""}}</textarea>
-                <label for="location">Location</label>
+                <br>
+                <div class="text-center">
+                    <label for="date">Date of Event</label>
+                    <input type="date" name="date" value="{{form.date.value|date:'Y-m-d'}}">
+                    <label for="time">Time of Event</label>
+                    <input type="time" name="time" value="{{form.time.value|date:'H:i'}}">
+                    <br>
+                </div>
+                <!-- <label for="location">Location</label> -->
 
 
-                <div id="map"></div>
-                <!-- this line is unnecessary but taking it out breaks onClickParseView -->
-                <p>On idle position: <span id="onIdlePositionView"></span></p>
+                <!-- Displays the current coordinates -->
+                <!-- <p><span id="onIdlePositionView"></span></p> -->
                 <!-- Displays the closest address of the current position -->
-                <p>Chosen address: <span id="onClickParseView" ></span></p>
+                <!-- <p><span id="onClickParseView"></span></p> -->
                 <!-- Hidden field that assigns the current position to the location of the event object -->
-                <p hidden>Chosen address: <textarea class="form-control" name=location cols='40' rows='10' required="" id="onClickAddressView" >{{form.location.value}}</textarea></p>
+                <p>Chosen address: <textarea class="form-control" name=location cols='40' rows='2' required=""
+                        id="addressTextInput" onChange="initMap()">{{form.location.value|default:""}}</textarea>
+                </p>
+                <p hidden> address: <textarea class="form-control" name=location cols='40' rows='2' required=""
+                    id="addressSetValue">{{form.location.value|default:""}}</textarea>
+            </p>
+
                 <script>
+                    var map;
+                    var service;
+                    var infowindow;
+                    var addressTextInput = document.getElementById('addressTextInput')
 
-                    // Get element references
-                    var onClickPositionView = document.getElementById('onClickPositionView');
-                    var onIdlePositionView = document.getElementById('onIdlePositionView');
-                    var onClickAddressView = document.getElementById('onClickAddressView')
-                    var onClickParseView = document.getElementById('onClickParseView')
+                    function initMap() {
 
-                    // Initialize locationPicker plugin
-                    var lp = new locationPicker('map', {
-                        setCurrentPosition: true, // You can omit this, defaults to true
-                    }, {
-                            zoom: 15 // You can set any google map options here, zoom defaults to 15
+                        var request = {
+                            query: document.getElementById('addressTextInput').value,
+                            fields: ['name', 'geometry', 'formatted_address'],
+                        };
+
+                        var sydney = new google.maps.LatLng(-33.867, 151.195);
+
+                        infowindow = new google.maps.InfoWindow();
+
+                        map = new google.maps.Map(
+                            document.getElementById('map'), { center: sydney, zoom: 15 });
+
+
+
+                        service = new google.maps.places.PlacesService(map);
+
+                        service.findPlaceFromQuery(request, function (results, status) {
+                            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                                for (var i = 0; i < results.length; i++) { createMarker(results[i]); }
+                                map.setCenter(results[0].geometry.location);
+                                addressTextInput.innerHTML = results[0].formatted_address
+                                addressSetValue.innerHTML = results[0].formatted_address
+                            }
+                            console.log(request)
                         });
-
-                    // Listen to map idle event, listening to idle event more accurate than listening to ondrag event
-                    google.maps.event.addListener(lp.map, 'idle', function (event) {
-                        // Get current location and show it in HTML
-                        var location = lp.getMarkerPosition();
-                        onIdlePositionView.innerHTML = 'The chosen location is ' + location.lat + ',' + location.lng;
-                        // Sends API request and returns address based on lat and long 
-                        const Http = new XMLHttpRequest();
-                        const url = `http://api.geonames.org/findNearestAddressJSON?lat=${location.lat}&lng=${location.lng}&username=klevinw`
-                        Http.open("GET", url);
-                        Http.send();
-                        // changes both readable and raw variables to current position
-                        Http.onreadystatechange = (e) => {
-                            var parse = JSON.parse(Http.responseText)
-                            console.log(Http.responseText)
-                            onClickParseView.innerHTML = `${parse.address.streetNumber} ${parse.address.street}, ${parse.address.placename}, ${parse.address.adminName1}, ${parse.address.postalcode}`
-                            onClickAddressView.innerHTML = Http.responseText                           
-                        }
-                    });
-
+                    } function createMarker(place) {
+                        var marker = new
+                            google.maps.Marker({ map: map, position: place.geometry.location });
+                        google.maps.event.addListener(marker, 'click', function () {
+                            infowindow.setContent(place.name);
+                            infowindow.open(map, this);
+                        });
+                    }
 
                 </script>
-                <label for="date">Date of Event</label>
-                <input type="date" name="date" value="{{form.date.value}}">
-                <label for="time">Time of Event</label>
-                <input type="time" name="time" value="{{form.time.value}}">
+
+                <div id="map"></div>
+                <br> <br>
                 <input type="submit" value="Create Event" class="form-control">
             </div>
         </form>

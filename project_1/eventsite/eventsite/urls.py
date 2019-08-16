@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    path('', TemplateView.as_view(template_name="home.html"), name = 'home'),
     path('admin/', admin.site.urls),
     path('event/', include('eventapp.urls')),
     path('home/', TemplateView.as_view(template_name="home.html"), name = 'home'),
